@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OCR Analyzer Pro - AI-Powered Document Intelligence</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+       
+</head>
+<body>
+    <div id="root">
+        <!-- Navigation Header -->
+        <nav class="sticky top-0 z-50 glass-alt border-b border-cyan-500/20">
+            <div class="container-fluid">
+                <div class="flex items-center justify-between py-4">
+                    <!-- Logo -->
+                    <div class="flex items-center gap-3 animate-slide-in-down">
+                        <div class="text-3xl animate-float">🔍</div>
+                        <div>
+                            <h1 class="neon-text-green text-2xl font-bold">OCR Analyzer Pro</h1>
+                            <p class="text-xs text-gray-500">AI-Powered Document Intelligence</p>
+                        </div>
+                    </div>
+
+                    <!-- Right Actions -->
+                    <div class="flex items-center gap-4 animate-slide-in-down">
+                        <button class="text-gray-400 hover:text-neon-cyan transition-colors" title="Settings">
+                            <i class="fas fa-cog text-xl"></i>
+                        </button>
+                        <button class="text-gray-400 hover:text-neon-cyan transition-colors" title="History">
+                            <i class="fas fa-history text-xl"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="min-h-screen">
+            <div class="container-fluid py-12">
+                <!-- Alert Container -->
+                <div id="alertContainer" class="mb-8"></div>
+
+                <!-- Upload Section -->
+                <div class="card neon-border mb-12 animate-slide-in-up">
+                    <div class="mb-8">
+                        <h2 class="text-3xl font-bold mb-2 neon-text-green">
+                            <i class="fas fa-cloud-upload-alt mr-3"></i>Upload Your Document
+                        </h2>
+                        <p class="text-gray-400">Drag and drop or click to select. Supports JPG, PNG, GIF, WebP, PDF (Max 10MB)</p>
+                    </div>
+
+                    <!-- Upload Zone -->
+                    <div class="upload-zone" id="uploadZone">
+                        <div class="upload-icon">📄</div>
+                        <h3 class="text-xl font-bold mb-2">Drop Your Image Here</h3>
+                        <p class="text-gray-400 mb-4">or click to browse</p>
+                        <p class="text-xs text-gray-500">Instant OCR • Smart Classification • Secure Processing</p>
+                        <input type="file" id="fileInput" accept="image/*,.pdf" style="display: none;">
+                    </div>
+
+                    <!-- Preview Section -->
+                    <div id="previewSection" style="display: none;" class="mt-10 animate-slide-in-up">
+                        <h3 class="text-xl font-bold neon-text-cyan mb-6">Image Preview</h3>
+                        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                            <!-- Image Preview -->
+                            <div class="lg:col-span-1">
+                                <div class="neon-border rounded-lg overflow-hidden bg-black/30" style="max-height: 400px;">
+                                    <img id="previewImage" src="" alt="Preview" class="w-full h-full object-contain">
+                                </div>
+                            </div>
+
+                            <!-- File Info -->
+                            <div class="lg:col-span-2">
+                                <div class="grid grid-cols-2 gap-4 mb-6">
+                                    <div class="stat-card">
+                                        <div class="stat-label">File Size</div>
+                                        <div id="fileSize" class="text-lg font-bold text-gray-300">-</div>
+                                    </div>
+                                    <div class="stat-card">
+                                        <div class="stat-label">Format</div>
+                                        <div id="fileFormat" class="text-lg font-bold text-gray-300">-</div>
+                                    </div>
+                                    <div class="stat-card">
+                                        <div class="stat-label">Dimensions</div>
+                                        <div id="fileDimensions" class="text-lg font-bold text-gray-300">-</div>
+                                    </div>
+                                    <div class="stat-card">
+                                        <div class="stat-label">Upload Time</div>
+                                        <div id="uploadTime" class="text-lg font-bold text-gray-300">-</div>
+                                    </div>
+                                </div>
+
+                                <!-- Action Buttons -->
+                                <div class="flex gap-4">
+                                    <button class="btn-neon btn-primary flex-1" id="analyzeBtn">
+                                        <i class="fas fa-magic mr-2"></i>Analyze Image
+                                    </button>
+                                    <button class="btn-neon btn-secondary flex-1" id="clearBtn">
+                                        <i class="fas fa-times mr-2"></i>Clear
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Processing Status -->
+                <div id="processingSection" style="display: none;" class="card neon-border-pink mb-12 animate-slide-in-up">
+                    <div class="flex items-center gap-6">
+                        <div class="spinner"></div>
+                        <div class="flex-1">
+                            <h3 class="text-xl font-bold neon-text-pink mb-2">
+                                <i class="fas fa-brain mr-2"></i>Processing Your Image...
+                            </h3>
+                            <p id="processingStatus" class="text-gray-400 mb-4">Initializing OCR engine</p>
+                            <div class="progress-bar">
+                                <div id="progressFill" class="progress-fill" style="width: 0%;"></div>
+                            </div>
+                            <div class="flex justify-between mt-4 text-xs text-gray-500">
+                                <span id="processingTime">Elapsed: 0s</span>
+                                <span id="processingPercent">0%</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Results Section -->
+                <div id="resultsSection" style="display: none;" class="animate-slide-in-up">
+                    <!-- Metrics Dashboard -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+                        <div class="stat-card">
+                            <div class="stat-label"><i class="fas fa-file-alt mr-2"></i>Text Extracted</div>
+                            <div id="textCount" class="stat-value">0</div>
+                            <div class="text-xs text-gray-500 mt-2">characters</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-label"><i class="fas fa-database mr-2"></i>Structured Items</div>
+                            <div id="structuredCount" class="stat-value">0</div>
+                            <div class="text-xs text-gray-500 mt-2">extracted</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-label"><i class="fas fa-check-circle mr-2"></i>Overall Confidence</div>
+                            <div id="confidence" class="stat-value">0%</div>
+                            <div class="text-xs text-gray-500 mt-2">accuracy</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-label"><i class="fas fa-bolt mr-2"></i>Processing Time</div>
+                            <div id="totalTime" class="stat-value">0ms</div>
+                            <div class="text-xs text-gray-500 mt-2">duration</div>
+                        </div>
+                    </div>
+
+                    <!-- Results Card with Tabs -->
+                    <div class="card neon-border">
+                        <!-- Tabs -->
+                        <div class="tabs-container">
+                            <button class="tab-button active" data-tab="structured">
+                                <i class="fas fa-table mr-2"></i>Structured Data
+                            </button>
+                            <button class="tab-button" data-tab="unstructured">
+                                <i class="fas fa-align-left mr-2"></i>Full Text
+                            </button>
+                            <button class="tab-button" data-tab="raw">
+                                <i class="fas fa-code mr-2"></i>Raw JSON
+                            </button>
+                            <button class="tab-button" data-tab="export">
+                                <i class="fas fa-download mr-2"></i>Export
+                            </button>
+                        </div>
+
+                        <!-- Structured Data Tab -->
+                        <div id="structured-tab" class="tab-content">
+                            <div class="space-y-8">
+                                <!-- Emails -->
+                                <div id="emailsSection" style="display: none;">
+                                    <h3 class="text-lg font-bold neon-text-cyan mb-4">
+                                        <i class="fas fa-envelope mr-2"></i>Email Addresses
+                                    </h3>
+                                    <div id="emailsList" class="data-grid"></div>
+                                </div>
+
+                                <!-- Dates -->
+                                <div id="datesSection" style="display: none;">
+                                    <h3 class="text-lg font-bold neon-text-cyan mb-4">
+                                        <i class="fas fa-calendar mr-2"></i>Dates & Times
+                                    </h3>
+                                    <div id="datesList" class="data-grid"></div>
+                                </div>
+
+                                <!-- Phone Numbers -->
+                                <div id="phonesSection" style="display: none;">
+                                    <h3 class="text-lg font-bold neon-text-cyan mb-4">
+                                        <i class="fas fa-phone mr-2"></i>Phone Numbers
+                                    </h3>
+                                    <div id="phonesList" class="data-grid"></div>
+                                </div>
+
+                                <!-- URLs -->
+                                <div id="urlsSection" style="display: none;">
+                                    <h3 class="text-lg font-bold neon-text-cyan mb-4">
+                                        <i class="fas fa-link mr-2"></i>Web Links
+                                    </h3>
+                                    <div id="urlsList" class="data-grid"></div>
+                                </div>
+
+                                <!-- Currency -->
+                                <div id="currencySection" style="display: none;">
+                                    <h3 class="text-lg font-bold neon-text-cyan mb-4">
+                                        <i class="fas fa-dollar-sign mr-2"></i>Currency Amounts
+                                    </h3>
+                                    <div id="currencyList" class="data-grid"></div>
+                                </div>
+
+                                <!-- Tables -->
+                                <div id="tablesSection" style="display: none;">
+                                    <h3 class="text-lg font-bold neon-text-cyan mb-4">
+                                        <i class="fas fa-th mr-2"></i>Detected Tables
+                                    </h3>
+                                    <div id="tablesList" class="space-y-6"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Full Text Tab -->
+                        <div id="unstructured-tab" class="tab-content" style="display: none;">
+                            <h3 class="text-lg font-bold neon-text-green mb-4">
+                                <i class="fas fa-align-left mr-2"></i>Extracted Document Text
+                            </h3>
+                            <div id="textContent" class="glass rounded-lg p-6 text-gray-300 leading-relaxed max-h-96 overflow-y-auto text-sm"></div>
+                            <div class="mt-4">
+                                <button class="btn-neon btn-secondary" id="copyTextBtn">
+                                    <i class="fas fa-copy mr-2"></i>Copy Text
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Raw JSON Tab -->
+                        <div id="raw-tab" class="tab-content" style="display: none;">
+                            <h3 class="text-lg font-bold neon-text-pink mb-4">
+                                <i class="fas fa-code mr-2"></i>Raw JSON Data
+                            </h3>
+                            <button class="btn-neon btn-secondary mb-4" id="copyJsonBtn">
+                                <i class="fas fa-copy mr-2"></i>Copy JSON
+                            </button>
+                            <pre id="rawJson" class="glass rounded-lg p-6 text-green-400 text-xs overflow-x-auto max-h-96 font-mono"></pre>
+                        </div>
+
+                        <!-- Export Tab -->
+                        <div id="export-tab" class="tab-content" style="display: none;">
+                            <h3 class="text-lg font-bold neon-text-cyan mb-6">
+                                <i class="fas fa-download mr-2"></i>Export Results in Multiple Formats
+                            </h3>
+                            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                <button class="btn-neon btn-primary" id="exportJson">
+                                    <i class="fas fa-file-code mr-2"></i>JSON Format
+                                </button>
+                                <button class="btn-neon btn-primary" id="exportCsv">
+                                    <i class="fas fa-file-csv mr-2"></i>CSV Format
+                                </button>
+                                <button class="btn-neon btn-primary" id="exportTxt">
+                                    <i class="fas fa-file-alt mr-2"></i>Text Format
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+        
+</body>
+</html>
