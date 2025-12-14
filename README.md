@@ -1,4 +1,6 @@
 📸 Image Calibrating & Data Extraction System
+<img width="1846" height="859" alt="Screenshot 2025-12-14 225623" src="https://github.com/user-attachments/assets/d3b4784c-ce09-43ec-bb39-9ce3ccd6ddff" />
+
 
   Scan. Analyze. Extract. Visualize.
   A neon-themed image calibration and data extraction web application.
@@ -10,6 +12,8 @@
 This project is designed to take an image as input, analyze and calibrate it using image processing techniques, extract meaningful data, and present the results to the user in an intuitive way. 
 The application supports both structured data (emails, phone numbers, dates, etc.) and unstructured data (raw extracted text), making it useful for document analysis, invoices, notes, and scanned images.
 The entire system is built using pure HTML, CSS, and JavaScript, keeping it lightweight, fast, and easy to understand.
+<img width="1824" height="906" alt="Screenshot 2025-12-14 225750" src="https://github.com/user-attachments/assets/444d71c5-b7fa-4be0-8491-f7239db95e2f" />
+
 
 ✨ Key Features { but not accurate😄} 
 
@@ -33,6 +37,7 @@ image-calibrating-project/
 
 📄 File Breakdown  
 🧩 index.html
+<img width="1826" height="905" alt="Screenshot 2025-12-14 225655" src="https://github.com/user-attachments/assets/7382815b-3292-4861-95d3-fc1732461910" />
 
 Handles the UI layout and structure
 Contains upload section, preview area, and result sections
